@@ -1,0 +1,40 @@
+```mermaid
+graph LR
+    subgraph Request["Request Flow"]
+        User[User Request]
+        DNS[Route 53]
+        Edge[Edge Location]
+    end
+
+    subgraph Process["Edge Processing"]
+        WAF[WAF Rules]
+        Cache[Cache Lookup]
+        Lambda[Lambda@Edge]
+    end
+
+    subgraph Origin["Origin Fetch"]
+        Shield[Origin Shield]
+        S3[S3 Origin]
+        ALB[ALB Origin]
+    end
+
+    subgraph Response["Response"]
+        Compress[Compression]
+        Headers[Headers]
+        Deliver[Delivery]
+    end
+
+    User --> DNS
+    DNS --> Edge
+    Edge --> WAF
+    WAF --> Cache
+    Cache --> Lambda
+    Lambda --> Shield
+    Shield --> S3
+    Shield --> ALB
+    S3 --> Compress
+    ALB --> Compress
+    Compress --> Headers
+    Headers --> Deliver
+    Deliver --> User
+```

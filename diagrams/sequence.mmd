@@ -1,0 +1,23 @@
+```mermaid
+sequenceDiagram
+    participant User as User
+    participant Edge as CloudFront Edge
+    participant Lambda as Lambda@Edge
+    participant Origin as Origin
+
+    User->>Edge: Request content
+    Edge->>Edge: Check cache
+    
+    alt Cache hit
+        Edge-->>User: Return cached content
+    else Cache miss
+        Edge->>Lambda: Viewer request
+        Lambda->>Lambda: Personalize/modify
+        Lambda->>Origin: Fetch content
+        Origin-->>Lambda: Return content
+        Lambda->>Lambda: Origin response
+        Lambda-->>Edge: Modified content
+        Edge->>Edge: Cache content
+        Edge-->>User: Return content
+    end
+```

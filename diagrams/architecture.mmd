@@ -1,0 +1,40 @@
+```mermaid
+graph TD
+    subgraph Users["Global Users"]
+        US[US Users]
+        EU[EU Users]
+        APAC[APAC Users]
+    end
+
+    subgraph Edge["CloudFront Edge"]
+        POP1[Edge Location US]
+        POP2[Edge Location EU]
+        POP3[Edge Location APAC]
+        Lambda[Lambda@Edge]
+    end
+
+    subgraph Security["Security Layer"]
+        WAF[AWS WAF]
+        Shield[Shield Advanced]
+    end
+
+    subgraph Origin["Origin"]
+        S3[S3 Bucket]
+        ALB[Application LB]
+        OriginShield[Origin Shield]
+    end
+
+    US --> WAF
+    EU --> WAF
+    APAC --> WAF
+    WAF --> Shield
+    Shield --> POP1
+    Shield --> POP2
+    Shield --> POP3
+    POP1 --> Lambda
+    POP2 --> Lambda
+    POP3 --> Lambda
+    Lambda --> OriginShield
+    OriginShield --> S3
+    OriginShield --> ALB
+```
